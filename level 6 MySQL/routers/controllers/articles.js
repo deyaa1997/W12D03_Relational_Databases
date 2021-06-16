@@ -49,7 +49,7 @@ const getAnArticleById = (req, res) => {
 };
 
 const createNewArticle = (req, res) => {
-	const query = `INSERT INTO articles (title ,description, author_id ) VALUES (? , ? , ?)`;
+	const query = `INSERT INTO articles title=? ,description =?, author_id ) VALUES (? , ? , ?)`;
 	const data = [req.body.title , req.body.description , req.body.author_id]
   connection.query(query, data, (err, results) => {
 	  if (err) throw err
@@ -65,16 +65,19 @@ const createNewArticle = (req, res) => {
 };
 
 const updateAnArticleById = (req, res) => {
-	const id = req.params.id;
-
-	articlesModel
-		.findByIdAndUpdate(id, req.body, { new: true })
-		.then((result) => {
-			res.status(200).json(result);
-		})
-		.catch((err) => {
-			res.send(err);
-		});
+	const query = `UPDATE articles SET title=? ,description=?, author_id=? WHERE id=?`;
+	const data = [req.body.title , req.body.description , req.body.author_id , req.body.id]
+  connection.query(query, data, (err, results) => {
+	  if (err) throw err
+    console.log(results);
+  });
+  const query1 = `select * from articles where id = ?`
+  const data1 =[req.body.id]
+  connection.query(query1, data1, (err, results) => {
+	if (err) throw err
+  console.log(results);
+  res.json(results)
+});
 };
 
 const deleteArticleById = (req, res) => {
