@@ -81,19 +81,19 @@ const updateAnArticleById = (req, res) => {
 };
 
 const deleteArticleById = (req, res) => {
-	const id = req.params.id;
-
-	articlesModel
-		.findByIdAndDelete(id)
-		.then((result) => {
-			res.status(200).json({
-				success: true,
-				message: `Success Delete atricle with id => ${id}`,
-			});
-		})
-		.catch((err) => {
-			res.send(err);
-		});
+	const query = `UPDATE articles SET is_deleted=? WHERE id=?`;
+	const data = [ 1 , req.body.id]
+  connection.query(query, data, (err, results) => {
+	  if (err) throw err
+    console.log(results);
+  });
+  const query1 = `SELECT * FROM articles WHERE id = ?`
+  const data1 =[req.body.id]
+  connection.query(query1, data1, (err, results) => {
+	if (err) throw err
+  console.log(results);
+  res.json(results)
+});
 };
 
 const deleteArticlesByAuthor = (req, res) => {
